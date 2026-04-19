@@ -3,7 +3,7 @@ import { ApiExcludeController } from '@nestjs/swagger';
 import type { Response } from 'express';
 
 @ApiExcludeController()
-@Controller('docs')
+@Controller('api/docs')
 export class DocsController {
   @Get()
   getDocs(@Res() res: Response) {

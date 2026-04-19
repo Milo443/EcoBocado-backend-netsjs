@@ -20,8 +20,8 @@ async function bootstrap() {
   // Habilitar CORS para desarrollo
   app.enableCors();
 
-  // Establecer prefijo global para la API
-  app.setGlobalPrefix('api/v1');
+  // Establecer prefijo global para la API (excluyendo documentación)
+  app.setGlobalPrefix('api/v1', { exclude: ['api/docs', 'api-json'] });
   
   // Configuración de Swagger
   const config = new DocumentBuilder()
