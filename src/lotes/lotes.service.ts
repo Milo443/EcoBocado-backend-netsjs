@@ -36,15 +36,15 @@ export class LotesService {
   }
 
   async create(createLoteDto: CreateLoteDto, donanteId: string): Promise<Lote> {
-    if (!donanteId || !Types.ObjectId.isValid(donanteId)) {
-      throw new Error('ID de donante inválido o ausente');
+    if (!donanteId) {
+      throw new Error('ID de donante ausente');
     }
 
     const { latitud, longitud, ...rest } = createLoteDto;
     
     const nuevoLote = new this.loteModel({
       ...rest,
-      donante_id: new Types.ObjectId(donanteId),
+      donante_id: donanteId,
       ubicacion: {
         type: 'Point',
         coordinates: [longitud, latitud],
@@ -58,12 +58,12 @@ export class LotesService {
 
   async findByDonante(donanteId: string): Promise<any[]> {
     try {
-      if (!donanteId || !Types.ObjectId.isValid(donanteId)) {
+      if (!donanteId) {
         return [];
       }
 
       const query: any = { 
-        donante_id: new Types.ObjectId(donanteId),
+        donante_id: donanteId,
         esta_borrado: { $ne: true } 
       };
       

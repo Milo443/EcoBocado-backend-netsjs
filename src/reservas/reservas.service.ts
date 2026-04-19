@@ -82,7 +82,7 @@ export class ReservasService {
 
       if (lote && lote.donante_id) {
           // Fetch donante from PostgreSQL
-          const donante = await this.userRepository.findOne({ where: { id: lote.donante_id.toString() } });
+          const donante = await this.userRepository.findOne({ where: { id: lote.donante_id } });
           if (donante) {
               donanteNombre = donante.nombre;
               donanteDireccion = donante.direccion;

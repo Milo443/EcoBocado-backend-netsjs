@@ -54,18 +54,16 @@ export class ImpactoService {
   }
 
   async getDonorDashboard(donorId: string): Promise<any> {
-    const donorObjectId = new Types.ObjectId(donorId);
-
     // Peso rescatado por este donador
     const resultKg = await this.loteModel.aggregate([
-      { $match: { donante_id: donorObjectId, estado: EstadoLote.COMPLETADO } },
+      { $match: { donante_id: donorId, estado: EstadoLote.COMPLETADO } },
       { $group: { _id: null, total: { $sum: '$peso_kg' } } },
     ]);
     const peso_donador = resultKg[0]?.total || 0;
 
     // Lotes actualmente activos
     const lotes_activos = await this.loteModel.countDocuments({
-      donante_id: donorObjectId,
+      donante_id: donorId,
       estado: EstadoLote.ACTIVO,
       esta_borrado: { $ne: true },
     });
@@ -94,7 +92,7 @@ export class ImpactoService {
         },
       },
       { $unwind: '$lote' },
-      { $match: { 'lote.donante_id': donorObjectId } },
+      { $match: { 'lote.donante_id': donorId } },
       { $count: 'total' },
     ]);
 

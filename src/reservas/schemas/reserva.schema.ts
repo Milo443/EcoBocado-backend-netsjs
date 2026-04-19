@@ -13,8 +13,8 @@ export class Reserva extends Document {
   @Prop({ type: Types.ObjectId, ref: 'Lote', required: true })
   lote_id: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  receptor_id: Types.ObjectId;
+  @Prop({ required: true })
+  receptor_id: string;
 
   @Prop({ default: EstadoReserva.PENDIENTE })
   estado: EstadoReserva;

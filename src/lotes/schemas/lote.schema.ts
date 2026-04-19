@@ -33,8 +33,8 @@ export class Lote extends Document {
   @Prop({ required: true })
   fecha_caducidad: Date;
 
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  donante_id: Types.ObjectId;
+  @Prop({ required: true })
+  donante_id: string;
 
   @Prop({
     type: {
