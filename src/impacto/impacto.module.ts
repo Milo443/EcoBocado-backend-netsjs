@@ -13,7 +13,6 @@ import { UsuariosModule } from '../usuarios/usuarios.module';
   imports: [
     MongooseModule.forFeature([
       { name: Lote.name, schema: LoteSchema },
-      { name: Reserva.name, schema: ReservaSchema },
     ]),
     TypeOrmModule.forFeature([UserEntity, ReservaEntity]),
     UsuariosModule,
