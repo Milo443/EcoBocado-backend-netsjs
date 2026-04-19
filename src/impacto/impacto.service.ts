@@ -76,7 +76,7 @@ export class ImpactoService {
       fecha_completada: { $gte: hoy },
     }).populate({
       path: 'lote_id',
-      match: { donante_id: donorObjectId }
+      match: { donante_id: donorId }
     });
     
     // Nota: El count con populate match requiere cuidado en NoSQL. 
