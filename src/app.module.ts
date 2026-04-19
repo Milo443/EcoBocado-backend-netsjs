@@ -1,8 +1,12 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { StatusModule } from './status/status.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
+import { LotesModule } from './lotes/lotes.module';
+import { ReservasModule } from './reservas/reservas.module';
+import { ImpactoModule } from './impacto/impacto.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
@@ -19,11 +23,30 @@ import { AuthModule } from './auth/auth.module';
       inject: [ConfigService],
     }),
 
+    // Conexión a PostgreSQL usando TypeORM
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get<string>('DB_USERNAME'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_NAME'),
+        autoLoadEntities: true,
+        synchronize: true, // Nota: En producción esto debería ser false
+      }),
+      inject: [ConfigService],
+    }),
+
     StatusModule,
 
     UsuariosModule,
 
     AuthModule,
+    LotesModule,
+    ReservasModule,
+    ImpactoModule,
   ],
 })
 export class AppModule {}

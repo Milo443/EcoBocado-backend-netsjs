@@ -1,59 +1,59 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { User, UserDocument } from './schemas/user.schema';
-import { Session, SessionDocument } from './schemas/session.schema';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { UserEntity } from './entities/user.entity';
+import { SessionEntity } from './entities/session.entity';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsuariosService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
-    @InjectModel(Session.name) private sessionModel: Model<SessionDocument>,
+    @InjectRepository(UserEntity) private userRepository: Repository<UserEntity>,
+    @InjectRepository(SessionEntity) private sessionRepository: Repository<SessionEntity>,
   ) {}
 
-  async create(userData: any): Promise<UserDocument> {
+  async create(userData: any): Promise<UserEntity> {
     const hashedPassword = await bcrypt.hash(userData.password, 10);
-    const newUser = new this.userModel({
-      ...userData,
-      password: hashedPassword,
-    });
-    return newUser.save();
+    const newUser = new UserEntity();
+    Object.assign(newUser, userData);
+    newUser.password = hashedPassword;
+    return await this.userRepository.save(newUser);
   }
 
-  async findByEmail(email: string): Promise<UserDocument | null> {
-    return this.userModel.findOne({ email }).exec();
+  async findByEmail(email: string): Promise<UserEntity | null> {
+    return this.userRepository.findOne({ where: { email } });
   }
 
   async updateOtp(email: string, otp: string | null, expiresAt: Date | null): Promise<void> {
-    await this.userModel.updateOne(
-      { email },
-      { 
-        otp_code: otp, 
-        otp_expires_at: expiresAt 
-      }
-    ).exec();
+    await this.userRepository.update({ email }, { 
+      otp_code: otp, 
+      otp_expires_at: expiresAt 
+    });
   }
 
-  async updatePerfil(id: string, updateData: any): Promise<UserDocument | null> {
-    return this.userModel.findByIdAndUpdate(id, updateData, { new: true }).exec();
+  async updatePerfil(id: string, updateData: any): Promise<UserEntity | null> {
+    await this.userRepository.update(id, updateData);
+    return this.findById(id);
   }
 
-  async findById(id: string): Promise<UserDocument | null> {
-    return this.userModel.findById(id).exec();
+  async findById(id: string): Promise<UserEntity | null> {
+    return this.userRepository.findOne({ where: { id } });
   }
 
   async saveSession(userId: string, email: string, ip: string, userAgent: string): Promise<void> {
-    const newSession = new this.sessionModel({
-      userId,
+    const newSession = this.sessionRepository.create({
+      usuario_id: userId,
       email,
       ip,
       userAgent,
     });
-    await newSession.save();
+    await this.sessionRepository.save(newSession);
   }
 
-  async getSessions(): Promise<SessionDocument[]> {
-    return this.sessionModel.find().sort({ createdAt: -1 }).limit(100).exec();
+  async getSessions(): Promise<SessionEntity[]> {
+    return this.sessionRepository.find({
+      order: { createdAt: 'DESC' },
+      take: 100
+    });
   }
 }

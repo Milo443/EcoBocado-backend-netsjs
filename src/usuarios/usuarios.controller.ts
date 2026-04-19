@@ -18,7 +18,7 @@ export class UsuariosController {
     return {
       message: 'Usuario registrado con éxito',
       usuario: {
-        id: user._id,
+        id: user.id,
         nombre: user.nombre,
         email: user.email,
         rol: user.rol,
@@ -36,7 +36,7 @@ export class UsuariosController {
       throw new UnauthorizedException('Usuario no encontrado');
     }
     return {
-      id: user._id,
+      id: user.id,
       nombre: user.nombre,
       email: user.email,
       rol: user.rol,

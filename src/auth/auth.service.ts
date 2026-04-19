@@ -41,15 +41,15 @@ export class AuthService {
 
     // Registrar auditoría de sesión
     if (ip && userAgent) {
-      await this.usuariosService.saveSession(user._id.toString(), user.email, ip, userAgent);
+      await this.usuariosService.saveSession(user.id, user.email, ip, userAgent);
     }
 
-    const payload = { sub: user._id, email: user.email, rol: user.rol };
+    const payload = { sub: user.id, email: user.email, rol: user.rol };
     
     return {
       access_token: await this.jwtService.signAsync(payload),
       usuario: {
-        id: user._id,
+        id: user.id,
         nombre: user.nombre,
         email: user.email,
         rol: user.rol,
