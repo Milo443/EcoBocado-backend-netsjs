@@ -8,6 +8,7 @@ import { LotesModule } from './lotes/lotes.module';
 import { ReservasModule } from './reservas/reservas.module';
 import { ImpactoModule } from './impacto/impacto.module';
 import { AuthModule } from './auth/auth.module';
+import { DocsController } from './common/controllers/docs.controller';
 
 @Module({
   imports: [
@@ -48,5 +49,6 @@ import { AuthModule } from './auth/auth.module';
     ReservasModule,
     ImpactoModule,
   ],
+  controllers: [DocsController],
 })
 export class AppModule {}

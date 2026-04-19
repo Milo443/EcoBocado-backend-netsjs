@@ -35,6 +35,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   
+  // Exponer el JSON de Swagger para ReDoc
+  app.getHttpAdapter().get('/api-json', (req, res) => {
+    res.json(document);
+  });
+  
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
   
