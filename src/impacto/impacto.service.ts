@@ -71,16 +71,8 @@ export class ImpactoService {
     // Entregas hoy (completadas en las últimas 24h)
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
-    const entregas_hoy = await this.reservaModel.countDocuments({
-      estado: EstadoReserva.COMPLETADO,
-      fecha_completada: { $gte: hoy },
-    }).populate({
-      path: 'lote_id',
-      match: { donante_id: donorId }
-    });
     
-    // Nota: El count con populate match requiere cuidado en NoSQL. 
-    // Opción B: Agregación.
+    // Agregación para contar entregas hoy filtrando por donante (híbrido)
     const entregasHoyAggregate = await this.reservaModel.aggregate([
       { $match: { estado: EstadoReserva.COMPLETADO, fecha_completada: { $gte: hoy } } },
       {
