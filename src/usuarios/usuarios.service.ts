@@ -56,4 +56,8 @@ export class UsuariosService {
       take: 100
     });
   }
+
+  async countByRol(rol: RolUsuario): Promise<number> {
+    return this.userRepository.count({ where: { rol } });
+  }
 }
