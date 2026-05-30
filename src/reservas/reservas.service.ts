@@ -95,6 +95,7 @@ export class ReservasService {
         lote_caduca: lote?.fecha_caducidad,
         donante_nombre: donanteNombre,
         donante_direccion: donanteDireccion,
+        lote_ubicacion: lote?.ubicacion || null,
       });
     }
 

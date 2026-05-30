@@ -21,6 +21,12 @@ export class User {
   direccion: string;
 
   @Prop()
+  latitud: number;
+
+  @Prop()
+  longitud: number;
+
+  @Prop()
   telefono: string;
 
   @Prop()

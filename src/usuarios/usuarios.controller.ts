@@ -6,22 +6,34 @@ import { RegisterUserDto } from './dto/register-user.dto';
 
 import { UpdateProfileDto } from './dto/update-profile.dto';
 
+import { JwtService } from '@nestjs/jwt';
+
 @ApiTags('usuarios')
 @Controller('usuarios')
 export class UsuariosController {
-  constructor(private readonly usuariosService: UsuariosService) {}
+  constructor(
+    private readonly usuariosService: UsuariosService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   @Post('register')
   @ApiOperation({ summary: 'Registro de un nuevo usuario' })
   async register(@Body() userData: RegisterUserDto) {
     const user = await this.usuariosService.create(userData);
+    const payload = { sub: user.id, email: user.email, rol: user.rol };
+    const token = await this.jwtService.signAsync(payload);
     return {
       message: 'Usuario registrado con éxito',
+      access_token: token,
       usuario: {
         id: user.id,
         nombre: user.nombre,
         email: user.email,
         rol: user.rol,
+        direccion: user.direccion,
+        latitud: user.latitud,
+        longitud: user.longitud,
+        telefono: user.telefono,
       },
     };
   }
@@ -41,6 +53,8 @@ export class UsuariosController {
       email: user.email,
       rol: user.rol,
       direccion: user.direccion,
+      latitud: user.latitud,
+      longitud: user.longitud,
       telefono: user.telefono,
     };
   }

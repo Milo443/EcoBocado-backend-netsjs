@@ -54,8 +54,45 @@ export class AuthService {
         email: user.email,
         rol: user.rol,
         direccion: user.direccion,
+        latitud: user.latitud,
+        longitud: user.longitud,
         telefono: user.telefono,
       },
+    };
+  }
+
+  async checkUserExists(email: string): Promise<boolean> {
+    const user = await this.usuariosService.findByEmail(email);
+    return !!user;
+  }
+
+  async validateOrCreateUser(googleUser: { email: string; nombre: string; avatar_url?: string }) {
+    let user = await this.usuariosService.findByEmail(googleUser.email);
+    if (!user) {
+      const crypto = require('crypto');
+      const randomPassword = crypto.randomBytes(20).toString('hex');
+      
+      user = await this.usuariosService.create({
+        nombre: googleUser.nombre,
+        email: googleUser.email,
+        password: randomPassword,
+        rol: 'RECEPTOR', // Rol por defecto
+        direccion: '',
+        telefono: '',
+        avatar_url: googleUser.avatar_url || '',
+      });
+    } else if (googleUser.avatar_url && user.avatar_url !== googleUser.avatar_url) {
+      user = await this.usuariosService.updatePerfil(user.id, {
+        avatar_url: googleUser.avatar_url,
+      });
+    }
+    return user;
+  }
+
+  async generateToken(user: any) {
+    const payload = { sub: user.id, email: user.email, rol: user.rol };
+    return {
+      access_token: await this.jwtService.signAsync(payload),
     };
   }
 }

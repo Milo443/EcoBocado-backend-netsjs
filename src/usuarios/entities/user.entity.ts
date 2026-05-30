@@ -29,6 +29,12 @@ export class UserEntity {
   @Column({ nullable: true })
   direccion: string;
 
+  @Column({ type: 'double precision', nullable: true })
+  latitud: number | null;
+
+  @Column({ type: 'double precision', nullable: true })
+  longitud: number | null;
+
   @Column({ nullable: true })
   telefono: string;
 

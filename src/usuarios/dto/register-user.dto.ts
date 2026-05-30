@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsEmail, MinLength, IsEnum, IsNotEmpty } from 'class-validator';
+import { IsString, IsEmail, MinLength, IsEnum, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
 
 export class RegisterUserDto {
   @ApiProperty({ example: 'EcoBocado Test', description: 'Nombre completo o del establecimiento' })
@@ -25,8 +25,23 @@ export class RegisterUserDto {
   @IsNotEmpty()
   direccion: string;
 
+  @ApiProperty({ example: 4.63819, description: 'Latitud de la dirección', required: false })
+  @IsNumber()
+  @IsOptional()
+  latitud?: number;
+
+  @ApiProperty({ example: -74.08448, description: 'Longitud de la dirección', required: false })
+  @IsNumber()
+  @IsOptional()
+  longitud?: number;
+
   @ApiProperty({ example: '3001234567', description: 'Teléfono de contacto' })
   @IsString()
   @IsNotEmpty()
   telefono: string;
+
+  @ApiProperty({ example: 'https://avatar.url', description: 'URL de imagen de perfil de Google', required: false })
+  @IsString()
+  @IsOptional()
+  avatar_url?: string;
 }
