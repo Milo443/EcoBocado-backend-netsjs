@@ -9,6 +9,7 @@ import { ReservasModule } from './reservas/reservas.module';
 import { ImpactoModule } from './impacto/impacto.module';
 import { AuthModule } from './auth/auth.module';
 import { DocsController } from './common/controllers/docs.controller';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { DocsController } from './common/controllers/docs.controller';
     LotesModule,
     ReservasModule,
     ImpactoModule,
+    SeedModule,
   ],
   controllers: [DocsController],
 })

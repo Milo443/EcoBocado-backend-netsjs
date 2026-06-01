@@ -4,10 +4,10 @@ import { ImpactoController } from './impacto.controller';
 import { ImpactoService } from './impacto.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Lote, LoteSchema } from '../lotes/schemas/lote.schema';
-import { Reserva, ReservaSchema } from '../reservas/schemas/reserva.schema';
 import { UserEntity } from '../usuarios/entities/user.entity';
 import { ReservaEntity } from '../reservas/entities/reserva.entity';
 import { UsuariosModule } from '../usuarios/usuarios.module';
+import { SeedModule } from '../seed/seed.module';
 
 @Module({
   imports: [
@@ -16,6 +16,7 @@ import { UsuariosModule } from '../usuarios/usuarios.module';
     ]),
     TypeOrmModule.forFeature([UserEntity, ReservaEntity]),
     UsuariosModule,
+    SeedModule,
   ],
   controllers: [ImpactoController],
   providers: [ImpactoService],

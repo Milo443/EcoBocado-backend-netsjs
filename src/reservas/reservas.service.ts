@@ -7,6 +7,7 @@ import { ReservaEntity, EstadoReserva } from './entities/reserva.entity';
 import { Lote, EstadoLote } from '../lotes/schemas/lote.schema';
 import { CreateReservaDto } from './dto/create-reserva.dto';
 import { UserEntity } from '../usuarios/entities/user.entity';
+import { SeedService } from '../seed/seed.service';
 
 @Injectable()
 export class ReservasService {
@@ -14,6 +15,7 @@ export class ReservasService {
     @InjectRepository(ReservaEntity) private reservaRepository: Repository<ReservaEntity>,
     @InjectModel(Lote.name) private loteModel: Model<Lote>,
     @InjectRepository(UserEntity) private userRepository: Repository<UserEntity>,
+    private seedService: SeedService,
   ) {}
 
   async crearReserva(createReservaDto: CreateReservaDto, receptorId: string): Promise<any> {
@@ -63,6 +65,13 @@ export class ReservasService {
   }
 
   async findByUsuario(receptorId: string, estado?: EstadoReserva): Promise<any[]> {
+    // Auto-Seeding JIT para Receptores nuevos (ej: creados por Google OAuth) que no tienen reservas
+    const count = await this.reservaRepository.count({ where: { receptor_id: receptorId } });
+    if (count === 0) {
+      console.log(`[ReservasService] El receptor ${receptorId} no tiene reservas. Ejecutando JIT Seeding...`);
+      await this.seedService.seedForReceptor(receptorId);
+    }
+
     const query: any = { where: { receptor_id: receptorId } };
     if (estado) {
       query.where.estado = estado;
