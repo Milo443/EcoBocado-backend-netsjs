@@ -37,3 +37,11 @@ src/scripts/create-db.ts
 src/scripts/create-tables.ts
 src/scripts/drop-all.ts
 src/scripts/migrate.ts
+
+# Directorios de pruebas y archivos temporales/scratch
+scratch/
+test/
+
+# Archivos markdown (excepto el README.md)
+*.md
+!README.md
